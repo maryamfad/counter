@@ -1,23 +1,68 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
 
 function App() {
+  const [time, setTime] = useState(0);
+  const [isTimerStarted, setTimerStarted] = useState(false);
+  const [intervalId, setIntervalId] = useState(0);
+  const startContdownTimer = () => {
+    setTimerStarted(true);
+    if (time > 0) {
+      const intervalId = setInterval(() => {
+        setTime((prevTime) => prevTime - 1);
+      }, 1000);
+      setIntervalId(intervalId);
+    }
+  };
+  if (time <= 0) {
+    clearInterval(intervalId);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100vh",
+      }}
+    >
+      <div>
+        {!isTimerStarted ? (
+          <input
+            type="number"
+            placeholder="Please insert Time here."
+            onChange={(e) => setTime(e.target.value)}
+            disabled={isTimerStarted}
+            value={time}
+          />
+        ) : (
+          <div>{time}</div>
+        )}
+        <button
+          onClick={() => {
+            startContdownTimer();
+          }}
         >
-          Learn React
-        </a>
-      </header>
+          OK
+        </button>
+        <button
+          onClick={() => {
+            clearInterval(intervalId);
+            setTimerStarted(false);
+          }}
+        >
+          Stop
+        </button>
+        <button
+          onClick={() => {
+            clearInterval(intervalId);
+            setTimerStarted(false);
+            setTime(0);
+          }}
+        >
+          Clear
+        </button>
+      </div>
     </div>
   );
 }
